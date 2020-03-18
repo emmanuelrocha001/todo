@@ -1,13 +1,17 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 
 
 function SearchBar(props) {
     return (
-    <form >
-      <input className="SearchBar" type="text" value={props.UserInput} onChange={props.handleChange} onKeyPress={props.handleKeyPress} />
-    </form>
+
+    <div className="SearchBarContainer">
+      <h1>TODO</h1>
+      <form >
+        <input className="SearchBar" type="text" value={props.UserInput} onChange={props.handleChange} onKeyPress={props.handleKeyPress} />
+      </form>
+
+    </div>
     );
 };
 
@@ -73,7 +77,6 @@ class App extends React.Component {
 
     return (
       <div className="App">
-        <h1>TODO</h1>
         <SearchBar userInput={this.state.userInput} handleChange={this.handleChange} handleKeyPress={this.handleKeyPress}/>
         <TaskList tasks={this.state.tasks}/>
       </div>
