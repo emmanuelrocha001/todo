@@ -1,17 +1,52 @@
 .App {
   text-align: center;
+
+
 }
 
-
+h1 {
+  color: #35CFFF
+}
 .SearchBar {
+  /* background: purple; */
   margin-top: 30px;
   font-size: 30px;
   border-left: none;
   border-right: none;
   border-top: none;
-  border-bottom: 3px solid turquoise;
+  border-bottom: 2px solid #6EDAFD;
+  color: #414141;
 }
 
+.TaskBoard {
+  /* background: red; */
+
+  margin-top: 50px;
+}
+
+
+ul {
+  display: inline-block;
+  text-align: start;
+  width: 500px;
+}
+
+li {
+  font-size: 18px;
+  list-style: none;
+  max-width: 750px;
+  padding: 10px;
+  margin-bottom: 15px;
+  /* padding-left: 15%; */
+  color: 414141;
+  background: #D6F5FF;
+  border-radius: 18px;
+}
+
+li:nth-child(odd) {
+  color: white;
+  background: #35CFFF;
+}
 
 .SearchBar:focus {
   outline-width: 0;
