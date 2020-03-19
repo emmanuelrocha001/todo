@@ -44,6 +44,10 @@ li:nth-child(odd) {
   background: #35CFFF;
 }
 
+li:hover {
+  filter: brightness(85%);
+}
+
 .SearchBar:focus {
   outline-width: 0;
 }
@@ -74,4 +78,9 @@ li:nth-child(odd) {
 h1 {
   margin-top: 10px;
   color: #35CFFF
+}
+
+p {
+  color: #35CFFF;
+  font-size: 20px;
 }

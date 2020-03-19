@@ -16,15 +16,24 @@ function SearchBar(props) {
 };
 
 
+
+function Task(props) {
+  return(
+    <li onClick={() => props.handleItemDel(props.id)}>{props.taskText}</li>
+  );
+
+}
+
 function TaskList(props) {
-
-  const listTasks = props.tasks.map((task) =>
-    <li>{task}</li>
-
+  const listTasks = props.tasks.map((task, index) =>
+  <Task taskText={task} key={index} id={index} handleItemDel={props.handleItemDel}/>
   );
 
   return(
     <div className="TaskBoard">
+      {props.tasks.length < 1 &&
+        <p> no tasks...</p>
+      }
       <ul>{listTasks}</ul>
 
     </div>
@@ -44,11 +53,22 @@ class App extends React.Component {
     // bind function
     this.handleChange = this.handleChange.bind(this);
     this.handleKeyPress = this.handleKeyPress.bind(this);
+    this.handleItemDel = this.handleItemDel.bind(this);
+  }
+
+  handleItemDel(id) {
+    var list = this.state.tasks.slice();
+    list.splice(id,1);
+    this.setState({
+      tasks: list
+    });
+
+
+
   }
 
   handleChange(event) {
     this.setState({userInput: event.target.value});
-
   }
 
 
@@ -56,9 +76,9 @@ class App extends React.Component {
   handleKeyPress(event) {
     if( event.key === "Enter" ) {
 
-      if(this.state.userInput != "") {
+      if(this.state.userInput !== "") {
         var list = this.state.tasks.slice();
-        list.push(this.state.userInput);
+        list.unshift(this.state.userInput);
         this.setState({
           userInput: "",
           tasks: list
@@ -78,7 +98,7 @@ class App extends React.Component {
     return (
       <div className="App">
         <SearchBar userInput={this.state.userInput} handleChange={this.handleChange} handleKeyPress={this.handleKeyPress}/>
-        <TaskList tasks={this.state.tasks}/>
+        <TaskList tasks={this.state.tasks} handleItemDel={this.handleItemDel}/>
       </div>
     );
 
