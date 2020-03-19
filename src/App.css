@@ -46,7 +46,13 @@ li:nth-child(odd) {
 
 li:hover {
   filter: brightness(85%);
+  width: 525px;
 }
+
+button {
+  float: right;
+}
+
 
 .SearchBar:focus {
   outline-width: 0;
@@ -83,4 +89,16 @@ h1 {
 p {
   color: #35CFFF;
   font-size: 20px;
+}
+
+img {
+  background: purple;
+}
+.DeleteButton {
+  position: relative;
+  margin: 0;
+  padding: 0;
+  top: 50%;
+  width: 30px;
+  float: right;
 }

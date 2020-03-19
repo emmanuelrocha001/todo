@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-
+import quit from './quit.png'
 
 function SearchBar(props) {
     return (
@@ -19,7 +19,11 @@ function SearchBar(props) {
 
 function Task(props) {
   return(
-    <li onClick={() => props.handleItemDel(props.id)}>{props.taskText}</li>
+    <li onClick={() => props.handleItemDel(props.id)}>{props.taskText}
+    <img className="DeleteButton" src={quit} />
+
+    </li>
+
   );
 
 }
