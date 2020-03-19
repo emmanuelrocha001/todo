@@ -19,17 +19,19 @@
 
 
 ul {
-  margin: 0;
+  margin: auto;
   display: inline-block;
-  text-align: start;
+  align-items: center;
+  /* justify-content: center; */
   width: 500px;
   margin-top: 0;
+  /* list-style-type: none; */
 }
 
 li {
-  margin: 0;
+  display: list-item;
+  text-align: start;
   font-size: 18px;
-  list-style: none;
   max-width: 750px;
   padding: 10px;
   margin-bottom: 15px;
@@ -39,14 +41,17 @@ li {
   border-radius: 18px;
 }
 
+
 li:nth-child(odd) {
   color: white;
   background: #35CFFF;
 }
 
+
+
 li:hover {
   filter: brightness(85%);
-  width: 525px;
+  width: 510px;
 }
 
 button {
@@ -92,13 +97,18 @@ p {
 }
 
 img {
-  background: purple;
+  /* background: purple; */
 }
 .DeleteButton {
   position: relative;
   margin: 0;
   padding: 0;
   top: 50%;
-  width: 30px;
+  width: 18px;
   float: right;
+  filter: brightness(10%);
+}
+
+li:nth-child(odd) > .DeleteButton{
+  filter: brightness(100%);
 }

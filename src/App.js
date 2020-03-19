@@ -67,8 +67,6 @@ class App extends React.Component {
       tasks: list
     });
 
-
-
   }
 
   handleChange(event) {
