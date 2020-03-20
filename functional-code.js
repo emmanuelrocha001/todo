@@ -17,43 +17,26 @@ function SearchBar(props) {
 
 
 function handleTaskExpansion() {
-  // alert("taxk expanded");
+  alert("taxk expanded");
 }
 
 function handleTaskSimplify(id) {
-  // alert("task minimized" + id);
+  alert("task minimized" + id);
 }
 function Task(props) {
+  return(
+    <li onMouseLeave={() => handleTaskSimplify(props.id)} onMouseEnter={handleTaskExpansion} onClick={() => props.handleItemDel(props.id)}>{props.taskText}
+    <img className="DeleteButton" src={quit} />
 
+    </li>
 
-  if( props.task["completed"] !== true){
-
-    return(
-
-      <li onMouseLeave={() => handleTaskSimplify(props.id)} onMouseEnter={handleTaskExpansion} onClick={() => props.handleItemCheckOff(props.id)}>
-      {props.task["taskText"]}
-      </li>
-
-    );
-  } else {
-
-    return(
-      <li className="CompletedTask" onMouseLeave={() => handleTaskSimplify(props.id)} onMouseEnter={handleTaskExpansion} onClick={() => props.handleItemCheckOff(props.id)}>
-      {props.task["taskText"]}
-      </li>
-    );
-
-  }
+  );
 
 }
-
-// delete button
-//<img className="DeleteButton" src={quit} />
-
 
 function TaskList(props) {
   const listTasks = props.tasks.map((task, index) =>
-  <Task task={task} key={index} id={index} handleItemCheckOff={props.handleItemCheckOff}/>
+  <Task taskText={task} key={index} id={index} handleItemDel={props.handleItemDel}/>
   );
 
   return(
@@ -80,41 +63,30 @@ class App extends React.Component {
     // bind function
     this.handleChange = this.handleChange.bind(this);
     this.handleKeyPress = this.handleKeyPress.bind(this);
-    this.handleItemCheckOff = this.handleItemCheckOff.bind(this);
+    this.handleItemDel = this.handleItemDel.bind(this);
   }
 
-  handleItemCheckOff(id) {
+  handleItemDel(id) {
     var list = this.state.tasks.slice();
-    var completed = !this.state.tasks[id]["completed"]
-    list[id] = { "taskText": this.state.tasks[id]["taskText"], "completed": completed}
-    // list.splice(id,1);
+    list.splice(id,1);
     this.setState({
       tasks: list
     });
 
   }
 
-  // handleItemCheckOff(id) {
-  //   var list = this.state.tasks.slice();
-  //   list.splice(id,1);
-  //   this.setState({
-  //     tasks: list
-  //   });
-
-  // }
-
   handleChange(event) {
     this.setState({userInput: event.target.value});
   }
 
 
-  // aka adding task to the list
+
   handleKeyPress(event) {
     if( event.key === "Enter" ) {
 
       if(this.state.userInput !== "") {
         var list = this.state.tasks.slice();
-        list.unshift({ "taskText": this.state.userInput, "completed": false});
+        list.unshift(this.state.userInput);
         this.setState({
           userInput: "",
           tasks: list
@@ -134,7 +106,7 @@ class App extends React.Component {
     return (
       <div className="App">
         <SearchBar userInput={this.state.userInput} handleChange={this.handleChange} handleKeyPress={this.handleKeyPress}/>
-        <TaskList tasks={this.state.tasks} handleItemCheckOff={this.handleItemCheckOff}/>
+        <TaskList tasks={this.state.tasks} handleItemDel={this.handleItemDel}/>
       </div>
     );
 

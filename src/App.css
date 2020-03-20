@@ -24,15 +24,16 @@ ul {
   align-items: center;
   /* justify-content: center; */
   width: 500px;
+  max-width: 500px;
   margin-top: 0;
   /* list-style-type: none; */
 }
 
 li {
-  display: list-item;
+  /* display: list-item; */
   text-align: start;
   font-size: 18px;
-  max-width: 750px;
+  max-width: 500px;
   padding: 10px;
   margin-bottom: 15px;
   /* padding-left: 15%; */
@@ -41,7 +42,13 @@ li {
   border-radius: 18px;
 }
 
+.CompletedTask {
+  text-decoration: line-through;
+  max-width: 750px;
+  /* z-index: 5; */
+  /* filter: brightness(70%); */
 
+}
 li:nth-child(odd) {
   color: white;
   background: #35CFFF;
@@ -51,7 +58,7 @@ li:nth-child(odd) {
 
 li:hover {
   filter: brightness(85%);
-  width: 510px;
+  /* width: 510px; */
 }
 
 button {
@@ -82,6 +89,7 @@ button {
   position: fixed;
   left: 0;
   right: 0;
+  /* background: red; */
   /* margin-left: auto;
   margin-right: auto; */
 }
@@ -104,9 +112,9 @@ img {
   margin: 0;
   padding: 0;
   top: 50%;
-  width: 18px;
+  width: 15px;
   float: right;
-  filter: brightness(10%);
+  filter: brightness(30%);
 }
 
 li:nth-child(odd) > .DeleteButton{
