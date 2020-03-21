@@ -24,18 +24,16 @@ function handleTaskSimplify(id) {
   // alert("task minimized" + id);
 }
 
-/*
-<div className="DeleteButton">
-      &nbsp;
-      </div>*/
 function Task(props) {
+  // fetch task info
 
 
+  //{props.task["taskText"]}
   if( props.task["completed"] !== true){
 
     return(
 
-      <li onMouseLeave={() => handleTaskSimplify(props.id)} onMouseEnter={handleTaskExpansion} onClick={() => props.handleItemCheckOff(props.id)}>
+      <li onMouseLeave={() => handleTaskSimplify(props.id)} onMouseEnter={handleTaskExpansion} onClick={() => props.handleItemCheckOff(props.task["_id"], props.task["completed"])}>
       {props.task["taskText"]}
       </li>
 
@@ -43,9 +41,9 @@ function Task(props) {
   } else {
 
     return(
-      <li className="CompletedTask" onMouseLeave={() => handleTaskSimplify(props.id)} onMouseEnter={handleTaskExpansion} onClick={() => props.handleItemCheckOff(props.id)}>
+      <li className="CompletedTask" onMouseLeave={() => handleTaskSimplify(props.id)} onMouseEnter={handleTaskExpansion} onClick={() => props.handleItemCheckOff(props.task["_id"], props.task["completed"])}>
       {props.task["taskText"]}
-      <img className="DeleteButton" src={quit} onClick={() => props.handleItemDeletion(props.id)}>
+      <img className="DeleteButton" src={quit} onClick={() => props.handleItemDeletion(props.task["_id"])}>
 
       </img>
 
@@ -94,64 +92,44 @@ class App extends React.Component {
 
   }
 
-  handleItemCheckOff(id) {
-
-    // mark task as complete
-    // [{ "propName": "likes", "value": "5" }]
-
-    // alert(JSON.stringify([{"propName": "completed", "value": "true"}]));
-
-    // bool-var.toString()
-
+  handleItemCheckOff(id, completed) {
+    var t = "true";
+    if(completed){
+      t = "false";
+    }
     const requestOptions = {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify([{"propName":"completed", "value": "true"}])
+      body: JSON.stringify([{"propName":"completed", "value": t}])
     };
-    fetch('https://event-maps-api.herokuapp.com/tasks/5e7574fb56bdbd0004d39d85', requestOptions)
-      .then(response => console.log(response.json()));
+    fetch('https://event-maps-api.herokuapp.com/tasks/' + id, requestOptions)
+      .then(response => {
+        // update tasks list
+        this.getTasksAsync().then(data => {
+          this.setState({
+            tasks: data["tasks"]
+          });
+        });
 
-
-
-
-
-
-
-
-    if(this.state.tasks.length > 0) {
-      var list = this.state.tasks.slice();
-      var completed = !this.state.tasks[id]["completed"]
-      list[id] = { "taskText": this.state.tasks[id]["taskText"], "completed": completed}
-      // list.splice(id,1);
-      this.setState({
-        tasks: list
-      });
-    }
+      }
+      ).catch(error => console.log("error"));
 
   }
 
   handleItemDeletion(id) {
-    alert(id);
-    // console.log(this.state.tasks);
-    // var l = [];
-    // var i;
-    // for( i=0; i<this.state.tasks.length;i++ ){
-    //   if(i !== id) {
-    //     l.push(this.state.tasks[i])
-    //   }
-    // }
-    // console.log(l);
-    console.log(this.state.tasks);
+    const requestOptions = {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+    };
+    fetch('https://event-maps-api.herokuapp.com/tasks/' + id, requestOptions)
+      .then(response => response.json()).catch( error => console.log(error));
 
-    var l = this.state.tasks.splice(id,1).slice();
-    console.log(l);
-
-    this.setState({
-      tasks: l
+    // update tasks list
+    this.getTasksAsync().then(data => {
+      this.setState({
+        tasks: data["tasks"]
+      });
     });
-
-
-
 
   }
 
@@ -165,34 +143,48 @@ class App extends React.Component {
     if( event.key === "Enter" ) {
 
       if(this.state.userInput !== "") {
-
-
-
        // add task to database
-      const requestOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ taskText: this.state.userInput })
-      };
-      fetch('https://event-maps-api.herokuapp.com/tasks/', requestOptions)
-        .then(response => response.json());
+        const requestOptions = {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ taskText: this.state.userInput })
+        };
+        fetch('https://event-maps-api.herokuapp.com/tasks/', requestOptions)
+          .then(response => response.json()).catch( error => console.log(error));
 
-      // update list
-        var list = this.state.tasks.slice();
-        list.unshift({ "taskText": this.state.userInput, "completed": false});
-        this.setState({
-          userInput: "",
-          tasks: list
+        // update tasks list
+        this.getTasksAsync().then(data => {
+          this.setState({
+            tasks: data["tasks"]
+          });
         });
-        event.target.value = "";
       }
-      // alert( " \"" + this.state.userInput + " \" - added to list" );
 
       event.preventDefault();
     }
   }
 
+  // get updated task list
+  async getTasksAsync()
+  {
+    const requestOptions = {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+    };
 
+    var response = await fetch('https://event-maps-api.herokuapp.com/tasks/', requestOptions).catch( error => console.log(error));
+    var data = await response.json();
+    return data;
+  }
+
+  // fetch all tasks on startup
+  componentDidMount() {
+    this.getTasksAsync().then(data => {
+      this.setState({
+        tasks: data["tasks"]
+      });
+    });
+  }
 
   render() {
 
