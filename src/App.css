@@ -33,7 +33,6 @@ li {
   display: list-item;
   text-align: start;
   font-size: 18px;
-  max-width: 500px;
   padding: 10px;
   margin-bottom: 15px;
   /* padding-left: 15%; */
@@ -123,4 +122,18 @@ img {
 
 li:nth-child(odd) > .DeleteButton{
   filter: brightness(100%);
+}
+
+
+/* Smartphones (portrait) ----------- */
+@media only screen and (max-device-width: 400px){
+  ul {
+    width: 250px;
+    max-width: 250px;
+
+  }
+
+  .SearchBar {
+    font-size: 20px;
+  }
 }

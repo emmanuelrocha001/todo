@@ -44,7 +44,6 @@ function Task(props) {
       <li className="CompletedTask" onMouseLeave={() => handleTaskSimplify(props.id)} onMouseEnter={handleTaskExpansion} onClick={() => props.handleItemCheckOff(props.task["_id"], props.task["completed"])}>
       {props.task["taskText"]}
       <img className="DeleteButton" src={quit} onClick={() => props.handleItemDeletion(props.task["_id"])}>
-
       </img>
 
       </li>
