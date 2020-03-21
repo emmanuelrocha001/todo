@@ -96,6 +96,28 @@ class App extends React.Component {
 
   handleItemCheckOff(id) {
 
+    // mark task as complete
+    // [{ "propName": "likes", "value": "5" }]
+
+    // alert(JSON.stringify([{"propName": "completed", "value": "true"}]));
+
+    // bool-var.toString()
+
+    const requestOptions = {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify([{"propName":"completed", "value": "true"}])
+    };
+    fetch('https://event-maps-api.herokuapp.com/tasks/5e7574fb56bdbd0004d39d85', requestOptions)
+      .then(response => console.log(response.json()));
+
+
+
+
+
+
+
+
     if(this.state.tasks.length > 0) {
       var list = this.state.tasks.slice();
       var completed = !this.state.tasks[id]["completed"]
@@ -143,6 +165,19 @@ class App extends React.Component {
     if( event.key === "Enter" ) {
 
       if(this.state.userInput !== "") {
+
+
+
+       // add task to database
+      const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ taskText: this.state.userInput })
+      };
+      fetch('https://event-maps-api.herokuapp.com/tasks/', requestOptions)
+        .then(response => response.json());
+
+      // update list
         var list = this.state.tasks.slice();
         list.unshift({ "taskText": this.state.userInput, "completed": false});
         this.setState({
