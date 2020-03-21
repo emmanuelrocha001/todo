@@ -1,12 +1,15 @@
 import React from 'react';
 import './App.css';
 import quit from './quit.png'
-
+import logo from './logo.png'
 function SearchBar(props) {
     return (
 
     <div className="SearchBarContainer">
+      <div className="LogoContainer">
       <h1>TODO</h1>
+      <img className="Logo" src={logo}></img>
+      </div>
       <form >
         <input className="SearchBar" type="text" value={props.UserInput} onChange={props.handleChange} onKeyPress={props.handleKeyPress} />
       </form>
@@ -154,11 +157,12 @@ class App extends React.Component {
         // update tasks list
         this.getTasksAsync().then(data => {
           this.setState({
-            tasks: data["tasks"]
+            tasks: data["tasks"],
+            userInput: ""
           });
         });
       }
-
+      event.target.value = "";
       event.preventDefault();
     }
   }
