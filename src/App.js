@@ -2,6 +2,8 @@ import React from 'react';
 import './App.css';
 import quit from './quit.png'
 import logo from './logo.png'
+import cat from './Octocat.png'
+
 function SearchBar(props) {
     return (
 
@@ -195,6 +197,11 @@ class App extends React.Component {
       <div className="App">
         <SearchBar userInput={this.state.userInput} handleChange={this.handleChange} handleKeyPress={this.handleKeyPress}/>
         <TaskList tasks={this.state.tasks} handleItemCheckOff={this.handleItemCheckOff} handleItemDeletion={this.handleItemDeletion}/>
+        <div className="RepoContainer">
+        <a href="https://github.com/emmanuelrocha001/todo">
+          <img className="RepoLogo" src={cat}></img>
+        </a>
+        </div>
       </div>
     );
 

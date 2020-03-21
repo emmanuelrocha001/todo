@@ -43,6 +43,7 @@ ul {
   width: 500px;
   max-width: 500px;
   margin-top: 0;
+  margin-bottom: 100px;
   /* list-style-type: none; */
 }
 
@@ -99,6 +100,7 @@ button {
 }
 
 .SearchBarContainer {
+  z-index: 50;
   height: 150px;
   position: fixed;
   background: white;
@@ -132,6 +134,22 @@ img {
   /* filter: brightness(30%); */
   filter: brightness(100%);
 
+}
+
+.RepoContainer {
+
+  /* background: red; */
+  background: white;
+  width: 100%;
+  bottom: 0px;
+  position: fixed;
+  /* background: red; */
+}
+
+.RepoLogo {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  width: 75px;
 }
 
 li:nth-child(odd) > .DeleteButton{
