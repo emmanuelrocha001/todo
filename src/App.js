@@ -3,22 +3,45 @@ import './App.css';
 import quit from './quit.png'
 import logo from './logo.png'
 import cat from './Octocat.png'
+import refresh from './refresh.svg';
 
 function SearchBar(props) {
-    return (
-
-    <div className="SearchBarContainer">
-      <div className="LogoContainer">
-      <h1>TODO</h1>
-      <img className="Logo" src={logo}></img>
-      </div>
-      <form >
-        <input className="SearchBar" type="text" value={props.UserInput} onChange={props.handleChange} onKeyPress={props.handleKeyPress} />
-      </form>
-
-    </div>
-    );
+    if(props.isLoading == false) {
+      return (
+        <div className="SearchBarContainer">
+          <div className="LogoContainer">
+          <h1>TODO</h1>
+          <img className="Logo" src={logo}></img>
+          </div>
+          <form >
+            <input className="SearchBar" type="text" value={props.UserInput} onChange={props.handleChange} onKeyPress={props.handleKeyPress} />
+          </form>
+    
+        </div>
+        );
+    } else {
+      return (
+        <div className="SearchBarContainer">
+          <div className="LogoContainer">
+          <h1>TODO</h1>
+          <img className="Logo" src={logo}></img>
+          </div>
+          <LoadingBar />
+    
+        </div>
+        );
+    }
+    
 };
+
+
+function LoadingBar(props) {
+  return <div className="LoadingContainer">
+    <img src={refresh} className="LoadingIcon">
+            </img>
+  </div>
+}
+
 
 
 function handleTaskExpansion() {
@@ -37,8 +60,7 @@ function Task(props) {
   if( props.task["completed"] !== true){
 
     return(
-
-      <li onMouseLeave={() => handleTaskSimplify(props.id)} onMouseEnter={handleTaskExpansion} onClick={() => props.handleItemCheckOff(props.task["_id"], props.task["completed"])}>
+      <li onClick={() => props.handleItemCheckOff(props.task["taskId"], props.task["completed"])}>
       {props.task["taskText"]}
       </li>
 
@@ -46,9 +68,9 @@ function Task(props) {
   } else {
 
     return(
-      <li className="CompletedTask" onMouseLeave={() => handleTaskSimplify(props.id)} onMouseEnter={handleTaskExpansion} onClick={() => props.handleItemCheckOff(props.task["_id"], props.task["completed"])}>
+      <li className="CompletedTask" onClick={() => props.handleItemCheckOff(props.task["taskId"], props.task["completed"])}>
       {props.task["taskText"]}
-      <img className="DeleteButton" src={quit} onClick={() => props.handleItemDeletion(props.task["_id"])}>
+      <img className="DeleteButton" src={quit} onClick={() => props.handleItemDeletion(props.task["taskId"])}>
       </img>
 
       </li>
@@ -63,8 +85,9 @@ function Task(props) {
 
 
 function TaskList(props) {
-  const listTasks = props.tasks.map((task, index) =>
-  <Task task={task} key={index} id={index} handleItemCheckOff={props.handleItemCheckOff} handleItemDeletion={props.handleItemDeletion}/>
+  const listTasks = props.tasks.map((task, index) => {
+    return <Task task={task} key={index} id={index} handleItemCheckOff={props.handleItemCheckOff} handleItemDeletion={props.handleItemDeletion}/>
+  }
   );
 
   return(
@@ -85,6 +108,7 @@ class App extends React.Component {
     super(props);
     this.state = {
       userInput: "",
+      isLoading: false,
       tasks: []
     }
 
@@ -97,26 +121,29 @@ class App extends React.Component {
   }
 
   handleItemCheckOff(id, completed) {
-    var t = "true";
-    if(completed){
-      t = "false";
-    }
-    const requestOptions = {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify([{"propName":"completed", "value": t}])
-    };
-    fetch('https://event-maps-api.herokuapp.com/tasks/' + id, requestOptions)
-      .then(response => {
-        // update tasks list
-        this.getTasksAsync().then(data => {
-          this.setState({
-            tasks: data["tasks"]
-          });
-        });
+    if(completed == false) {
 
-      }
-      ).catch(error => console.log("error"));
+
+      var t = !completed;
+  
+      const requestOptions = {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({'completed': t})
+      };
+      fetch('https://test-backend-eb284.firebaseio.com/tasks/' + id + '.json', requestOptions)
+        .then(response => {
+          // update tasks list
+          this.getTasksAsync().then(data => {
+            this.setState({
+              tasks: data
+            });
+          });
+  
+        }
+        ).catch(error => console.log("error"));
+
+    }
 
   }
 
@@ -125,13 +152,13 @@ class App extends React.Component {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' },
     };
-    fetch('https://event-maps-api.herokuapp.com/tasks/' + id, requestOptions)
+    fetch('https://test-backend-eb284.firebaseio.com/tasks/' + id + '.json', requestOptions)
       .then(response => response.json()).catch( error => console.log(error));
 
     // update tasks list
     this.getTasksAsync().then(data => {
       this.setState({
-        tasks: data["tasks"]
+        tasks: data
       });
     });
 
@@ -151,15 +178,18 @@ class App extends React.Component {
         const requestOptions = {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ taskText: this.state.userInput })
+          body: JSON.stringify({ taskText: this.state.userInput, completed: false })
         };
-        fetch('https://event-maps-api.herokuapp.com/tasks/', requestOptions)
+        fetch('https://test-backend-eb284.firebaseio.com/tasks.json', requestOptions)
           .then(response => response.json()).catch( error => console.log(error));
 
         // update tasks list
+
+
         this.getTasksAsync().then(data => {
+          // console.log((fetchedTasks));
           this.setState({
-            tasks: data["tasks"],
+            tasks: data,
             userInput: ""
           });
         });
@@ -172,22 +202,47 @@ class App extends React.Component {
   // get updated task list
   async getTasksAsync()
   {
+    this.setState({
+      isLoading: true,
+    });
+
     const requestOptions = {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
     };
 
-    var response = await fetch('https://event-maps-api.herokuapp.com/tasks/', requestOptions).catch( error => console.log(error));
+    var response = await fetch('https://test-backend-eb284.firebaseio.com/tasks.json', requestOptions).catch( error => console.log(error));
     var data = await response.json();
-    return data;
+    if(data != null) {
+      var fetchedTasks = [];
+      Object.keys(data).forEach( (key) => {
+        fetchedTasks.push({
+          'taskId': key,
+          'taskText': data[key]['taskText'],
+          'completed': data[key]['completed']
+        });
+      });
+      this.setState({
+        isLoading: false,
+      });
+      return fetchedTasks;
+
+    } else {
+      this.setState({
+        isLoading: false,
+      });
+      return [];
+    }
+    
   }
 
   // fetch all tasks on startup
   componentDidMount() {
     this.getTasksAsync().then(data => {
       this.setState({
-        tasks: data["tasks"]
+        tasks: data,
       });
+      
     });
   }
 
@@ -195,7 +250,8 @@ class App extends React.Component {
 
     return (
       <div className="App">
-        <SearchBar userInput={this.state.userInput} handleChange={this.handleChange} handleKeyPress={this.handleKeyPress}/>
+        
+        <SearchBar isLoading={this.state.isLoading}  userInput={this.state.userInput} handleChange={this.handleChange} handleKeyPress={this.handleKeyPress}/>
         <TaskList tasks={this.state.tasks} handleItemCheckOff={this.handleItemCheckOff} handleItemDeletion={this.handleItemDeletion}/>
         <div className="RepoContainer">
         <a href="https://github.com/emmanuelrocha001/todo">

@@ -18,13 +18,16 @@
 h1 {
   display: inline-block;
   margin-top: 10px;
-  color: #35CFFF
+  color: #35CFFF;
 }
 
 .LogoContainer{
   width: 100%;
   /* background: red; */
 }
+
+
+
 .TaskBoard {
   margin: 0;
   background-color: white;
@@ -112,6 +115,36 @@ button {
   margin-right: auto; */
 }
 
+.LoadingContainer {
+  width: 100%;
+  /* height:  50px; */
+  /* background: red; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.LoadingIcon {
+  width: 32px;
+  height: 32px;
+  /* opacity: .75; */
+
+  -webkit-animation:spin 2s linear infinite;
+  -moz-animation:spin 2s linear infinite;
+  animation:spin 2s linear infinite;
+}
+
+@-moz-keyframes spin {
+  100% { -moz-transform: rotate(360deg); }
+}
+@-webkit-keyframes spin {
+  100% { -webkit-transform: rotate(360deg); }
+}
+@keyframes spin {
+  100% {
+      -webkit-transform: rotate(360deg);
+      transform:rotate(360deg);
+      }
+  }
 
 
 p {
@@ -155,6 +188,7 @@ img {
 li:nth-child(odd) > .DeleteButton{
   filter: brightness(100%);
 }
+
 
 
 /* Smartphones (portrait) ----------- */
